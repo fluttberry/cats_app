@@ -1,4 +1,4 @@
-import 'package:cats_app/ui/cats_home_gape.dart';
+import 'package:cats_app/ui/cats_home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
