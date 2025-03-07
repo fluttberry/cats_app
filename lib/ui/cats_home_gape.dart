@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:cats_app/model/cat.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,28 +21,43 @@ class _CatsHomePageState extends State<CatsHomePage> {
             Expanded(
               child:
                   catModel != null
-                      ? Image.network(catModel!.url)
-                      : CircularProgressIndicator(),
+                      ? Image.network(catModel!.url, width: double.infinity)
+                      : Center(child: CircularProgressIndicator()),
             ),
-            InkWell(onTap: getCat
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff6756ff),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                height: 50,
+                width: double.infinity,
 
-            , child: Text('Next'),),
+                child: Center(
+                  child: InkWell(
+                    onTap: getCat,
+                    child: Text('Next', style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  getCat () async{
-setState(() {
-  catModel = null;
-});
+  getCat() async {
+    setState(() {
+      catModel = null;
+    });
 
-var response = await http.get(Uri.parse('https://cataas.com/cat'));
-if (response.statusCode==200) {
-setState(() {
-  catModel = CatModel.fromJson(response.body);
-});
-}
+    var response = await http.get(Uri.parse('https://cataas.com/cat?json=true'),);
+    if (response.statusCode == 200) {
+      setState(() {
+        catModel = CatModel.fromJson(utf8.decode(response.bodyBytes));
+      });
+    }
   }
 }
